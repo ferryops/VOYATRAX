@@ -64,7 +64,7 @@ export async function updateSession(request: NextRequest) {
     }
 
     // Cegah USER akses ke semua /admins/*
-    if (role === "user" && request.nextUrl.pathname.startsWith("/admins/")) {
+    if (role === "user" && request.nextUrl.pathname.startsWith("/admin/")) {
       const url = request.nextUrl.clone();
       url.pathname = "/"; // Redirect ke home
       return NextResponse.redirect(url);

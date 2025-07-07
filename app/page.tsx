@@ -1,8 +1,11 @@
+"use client";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
+
 export default function Home() {
+  useDocumentTitle("VoyaTrax - Aplikasi Pemesanan Tiket Pesawat");
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100">
       <div className="w-full max-w-3xl mx-auto my-10 px-6 py-10 rounded-2xl shadow-lg bg-white flex flex-col items-center border border-blue-100">
-        {/* Logo Emoji & Judul */}
         <div className="flex flex-col items-center gap-2 mb-5">
           <div className="bg-blue-100 w-16 h-16 flex items-center justify-center rounded-full shadow mb-2 text-4xl">
             ✈️
@@ -12,7 +15,6 @@ export default function Home() {
           </h1>
         </div>
 
-        {/* Banner */}
         <img
           src="https://dummyimage.com/600x300/ccc/333&text=VoyaTrax"
           alt="VoyaTrax Banner"

@@ -3,8 +3,10 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { loginWithRole } from "../(actions)/loginWithEmailPassword";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 export default function LoginPage() {
+  useDocumentTitle("Login Akun");
   const router = useRouter();
   const [serverError, setServerError] = useState("");
 
@@ -48,10 +50,10 @@ export default function LoginPage() {
             ✈️
           </div>
           <h1 className="text-2xl font-extrabold text-blue-600 mb-1">
-            Sign in to Your Account
+            Login Akun
           </h1>
           <span className="text-gray-400 text-sm">
-            Welcome back! Please enter your details.
+            Masuk untuk mulai pesan tiket.
           </span>
         </div>
 

@@ -3,8 +3,10 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { registerWithEmailPassword } from "../(actions)/registerWithEmailPassword";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 export default function RegisterPage() {
+  useDocumentTitle("Daftar Akun Baru");
   const router = useRouter();
   const [serverError, setServerError] = useState("");
 
@@ -36,54 +38,99 @@ export default function RegisterPage() {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="space-y-4 max-w-sm mx-auto mt-10"
-    >
-      <h1 className="text-xl font-bold mb-2">Register</h1>
-      <input
-        placeholder="Full Name"
-        {...register("name", { required: "Name is required" })}
-        className="input input-bordered w-full"
-      />
-      {errors.name && (
-        <div className="text-red-500 text-sm">{errors.name.message}</div>
-      )}
-
-      <input
-        placeholder="Email"
-        type="email"
-        {...register("email", {
-          required: "Email is required",
-          pattern: { value: /^\S+@\S+$/i, message: "Invalid email" },
-        })}
-        className="input input-bordered w-full"
-      />
-      {errors.email && (
-        <div className="text-red-500 text-sm">{errors.email.message}</div>
-      )}
-
-      <input
-        placeholder="Password"
-        type="password"
-        {...register("password", {
-          required: "Password is required",
-          minLength: { value: 6, message: "Min 6 characters" },
-        })}
-        className="input input-bordered w-full"
-      />
-      {errors.password && (
-        <div className="text-red-500 text-sm">{errors.password.message}</div>
-      )}
-
-      <button
-        type="submit"
-        className="btn btn-primary w-full"
-        disabled={isSubmitting}
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="bg-white px-8 py-8 rounded-2xl shadow-lg max-w-md w-full space-y-6 border border-blue-100"
       >
-        {isSubmitting ? "Registering..." : "Register"}
-      </button>
-      {serverError && <div className="text-red-500 text-sm">{serverError}</div>}
-    </form>
+        <div className="flex flex-col items-center gap-2 mb-4">
+          {/* Pakai logo kamu, sementara emoji 🎫 */}
+          <div className="bg-blue-100 w-14 h-14 flex items-center justify-center rounded-full shadow mb-1 text-3xl">
+            🎫
+          </div>
+          <h1 className="text-2xl font-extrabold text-blue-600 mb-1">
+            Buat Akun Baru
+          </h1>
+          <span className="text-gray-400 text-sm text-center">
+            Daftar untuk mulai pesan tiket.
+          </span>
+        </div>
+
+        <div>
+          <input
+            placeholder="Nama Lengkap"
+            autoComplete="name"
+            {...register("name", { required: "Nama wajib diisi" })}
+            className="block w-full px-4 py-3 rounded-xl border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm transition placeholder-gray-400"
+          />
+          {errors.name && (
+            <div className="text-red-500 text-xs mt-1">
+              {errors.name.message}
+            </div>
+          )}
+        </div>
+
+        <div>
+          <input
+            placeholder="Email"
+            type="email"
+            autoComplete="email"
+            {...register("email", {
+              required: "Email wajib diisi",
+              pattern: {
+                value: /^\S+@\S+$/i,
+                message: "Format email tidak valid",
+              },
+            })}
+            className="block w-full px-4 py-3 rounded-xl border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm transition placeholder-gray-400"
+          />
+          {errors.email && (
+            <div className="text-red-500 text-xs mt-1">
+              {errors.email.message}
+            </div>
+          )}
+        </div>
+
+        <div>
+          <input
+            placeholder="Password (min. 6 karakter)"
+            type="password"
+            autoComplete="new-password"
+            {...register("password", {
+              required: "Password wajib diisi",
+              minLength: { value: 6, message: "Minimal 6 karakter" },
+            })}
+            className="block w-full px-4 py-3 rounded-xl border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm transition placeholder-gray-400"
+          />
+          {errors.password && (
+            <div className="text-red-500 text-xs mt-1">
+              {errors.password.message}
+            </div>
+          )}
+        </div>
+
+        <button
+          type="submit"
+          className="w-full py-3 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-semibold text-base transition shadow-md disabled:opacity-70"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? "Mendaftarkan..." : "Daftar"}
+        </button>
+
+        {serverError && (
+          <div className="text-red-500 text-sm text-center">{serverError}</div>
+        )}
+
+        <div className="text-center text-sm mt-3 text-gray-400">
+          Sudah punya akun?{" "}
+          <a
+            href="/login"
+            className="text-blue-500 hover:underline font-semibold"
+          >
+            Login di sini
+          </a>
+        </div>
+      </form>
+    </div>
   );
 }

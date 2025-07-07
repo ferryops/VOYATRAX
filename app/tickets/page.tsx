@@ -4,6 +4,7 @@ import { fetchTickets, Ticket } from "@/app/(actions)/ticketActions";
 import { createClient } from "@/utils/supabase/client";
 import { useForm } from "react-hook-form";
 import { createOrder } from "../(actions)/orderActions";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 type OrderFormInputs = {
   items: Record<string, number>;
@@ -11,6 +12,7 @@ type OrderFormInputs = {
 };
 
 export default function UserTickets() {
+  useDocumentTitle("Daftar Tiket");
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [query, setQuery] = useState("");
   const [filtered, setFiltered] = useState<Ticket[]>([]);

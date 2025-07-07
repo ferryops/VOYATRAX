@@ -1,67 +1,79 @@
 export default function Home() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
-      <div className="w-full max-w-3xl mx-auto my-8 p-6 rounded shadow bg-white flex flex-col items-center">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100">
+      <div className="w-full max-w-3xl mx-auto my-10 px-6 py-10 rounded-2xl shadow-lg bg-white flex flex-col items-center border border-blue-100">
+        {/* Logo Emoji & Judul */}
+        <div className="flex flex-col items-center gap-2 mb-5">
+          <div className="bg-blue-100 w-16 h-16 flex items-center justify-center rounded-full shadow mb-2 text-4xl">
+            ✈️
+          </div>
+          <h1 className="text-3xl md:text-4xl font-extrabold mb-1 text-blue-600 tracking-tight">
+            VoyaTrax
+          </h1>
+        </div>
+
+        {/* Banner */}
         <img
           src="https://dummyimage.com/600x300/ccc/333&text=VoyaTrax"
           alt="VoyaTrax Banner"
-          className="mb-6 rounded"
+          className="mb-6 rounded-xl border border-blue-100 shadow"
           width={600}
           height={300}
         />
-        <h1 className="text-3xl font-bold mb-2 text-blue-700">VoyaTrax</h1>
-        <p className="mb-6 text-lg text-gray-700 text-center">
+
+        {/* Deskripsi */}
+        <p className="mb-7 text-lg text-gray-700 text-center max-w-2xl">
           <b>VoyaTrax</b> adalah aplikasi pemesanan tiket pesawat secara online,
-          mudah dan praktis! Dapatkan tiket termurah, cek promo, dan nikmati
+          mudah & praktis! Dapatkan tiket termurah, cek promo, dan nikmati
           kemudahan memesan tiket dari mana saja.
         </p>
-        <div className="grid md:grid-cols-3 gap-4 w-full mb-8">
-          <div className="flex flex-col items-center p-3">
-            <img
-              src="https://dummyimage.com/100x100/eee/000&text=1"
-              alt="Pilih tiket"
-              className="mb-2 rounded"
-            />
-            <p className="text-center">
-              Pilih dan cari tiket pesawat favoritmu
+
+        {/* 3 Langkah */}
+        <div className="grid md:grid-cols-3 gap-5 w-full mb-9">
+          <div className="flex flex-col items-center p-3 bg-blue-50 rounded-xl shadow-sm border border-blue-100">
+            <div className="bg-blue-100 w-14 h-14 flex items-center justify-center rounded-full mb-3 text-lg font-bold text-blue-700 shadow">
+              1
+            </div>
+            <p className="text-center font-medium text-gray-600">
+              Pilih & cari tiket pesawat favoritmu
             </p>
           </div>
-          <div className="flex flex-col items-center p-3">
-            <img
-              src="https://dummyimage.com/100x100/eee/000&text=2"
-              alt="Voucher"
-              className="mb-2 rounded"
-            />
-            <p className="text-center">
+          <div className="flex flex-col items-center p-3 bg-blue-50 rounded-xl shadow-sm border border-blue-100">
+            <div className="bg-blue-100 w-14 h-14 flex items-center justify-center rounded-full mb-3 text-lg font-bold text-blue-700 shadow">
+              2
+            </div>
+            <p className="text-center font-medium text-gray-600">
               Gunakan voucher diskon & promo menarik
             </p>
           </div>
-          <div className="flex flex-col items-center p-3">
-            <img
-              src="https://dummyimage.com/100x100/eee/000&text=3"
-              alt="Cetak tiket"
-              className="mb-2 rounded"
-            />
-            <p className="text-center">
+          <div className="flex flex-col items-center p-3 bg-blue-50 rounded-xl shadow-sm border border-blue-100">
+            <div className="bg-blue-100 w-14 h-14 flex items-center justify-center rounded-full mb-3 text-lg font-bold text-blue-700 shadow">
+              3
+            </div>
+            <p className="text-center font-medium text-gray-600">
               Cetak e-ticket langsung setelah pembayaran
             </p>
           </div>
         </div>
-        <div className="flex gap-4 mb-3">
+
+        {/* Tombol Aksi */}
+        <div className="flex gap-4 mb-3 w-full justify-center">
           <a
             href="/login"
-            className="btn btn-primary px-8 py-2 rounded text-white bg-blue-600 hover:bg-blue-700 transition"
+            className="px-8 py-3 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-semibold text-base shadow-md transition w-full md:w-auto text-center"
           >
             Login
           </a>
           <a
             href="/register"
-            className="btn px-8 py-2 rounded border border-blue-600 text-blue-600 hover:bg-blue-100 transition"
+            className="px-8 py-3 rounded-xl border border-blue-500 text-blue-600 hover:bg-blue-100 hover:border-blue-600 font-semibold text-base shadow-md transition w-full md:w-auto text-center"
           >
             Daftar
           </a>
         </div>
-        <div className="mt-2 text-sm text-gray-500">
+
+        {/* Footer */}
+        <div className="mt-3 text-sm text-gray-400">
           © {new Date().getFullYear()} VoyaTrax. All rights reserved.
         </div>
       </div>

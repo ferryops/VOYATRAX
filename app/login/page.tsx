@@ -28,51 +28,94 @@ export default function LoginPage() {
     }
 
     if (role === "admin") {
-      router.push("/admin");
+      router.push("/admin/dashboard");
     } else if (role === "user") {
-      router.push("/dashboard");
+      router.push("/tickets");
     } else {
       setServerError("Role tidak ditemukan, hubungi admin.");
     }
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="space-y-4 max-w-sm mx-auto mt-10"
-    >
-      <h1 className="text-xl font-bold mb-2">Login</h1>
-      <input
-        placeholder="Email"
-        type="email"
-        {...register("email", {
-          required: "Email is required",
-          pattern: { value: /^\S+@\S+$/i, message: "Invalid email" },
-        })}
-        className="input input-bordered w-full"
-      />
-      {errors.email && (
-        <div className="text-red-500 text-sm">{errors.email.message}</div>
-      )}
-
-      <input
-        placeholder="Password"
-        type="password"
-        {...register("password", { required: "Password is required" })}
-        className="input input-bordered w-full"
-      />
-      {errors.password && (
-        <div className="text-red-500 text-sm">{errors.password.message}</div>
-      )}
-
-      <button
-        type="submit"
-        className="btn btn-primary w-full"
-        disabled={isSubmitting}
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="bg-white px-8 py-8 rounded-2xl shadow-lg max-w-md w-full space-y-6 border border-blue-100"
       >
-        {isSubmitting ? "Logging in..." : "Login"}
-      </button>
-      {serverError && <div className="text-red-500 text-sm">{serverError}</div>}
-    </form>
+        <div className="flex flex-col items-center gap-2 mb-4">
+          {/* Pakai logo kamu, sementara emoji ✈️ */}
+          <div className="bg-blue-100 w-14 h-14 flex items-center justify-center rounded-full shadow mb-1 text-3xl">
+            ✈️
+          </div>
+          <h1 className="text-2xl font-extrabold text-blue-600 mb-1">
+            Sign in to Your Account
+          </h1>
+          <span className="text-gray-400 text-sm">
+            Welcome back! Please enter your details.
+          </span>
+        </div>
+
+        <div>
+          <input
+            placeholder="Email"
+            type="email"
+            autoComplete="email"
+            {...register("email", {
+              required: "Email is required",
+              pattern: { value: /^\S+@\S+$/i, message: "Invalid email" },
+            })}
+            className="block w-full px-4 py-3 rounded-xl border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm transition placeholder-gray-400"
+          />
+          {errors.email && (
+            <div className="text-red-500 text-xs mt-1">
+              {errors.email.message}
+            </div>
+          )}
+        </div>
+
+        <div>
+          <input
+            placeholder="Password"
+            type="password"
+            autoComplete="current-password"
+            {...register("password", { required: "Password is required" })}
+            className="block w-full px-4 py-3 rounded-xl border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm transition placeholder-gray-400"
+          />
+          {errors.password && (
+            <div className="text-red-500 text-xs mt-1">
+              {errors.password.message}
+            </div>
+          )}
+        </div>
+
+        <div className="flex justify-end">
+          <a
+            href="/forgot-password"
+            className="text-xs text-blue-500 hover:underline font-medium"
+          >
+            Forgot password?
+          </a>
+        </div>
+
+        <button
+          type="submit"
+          className="w-full py-3 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-semibold text-base transition shadow-md disabled:opacity-70"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? "Logging in..." : "Login"}
+        </button>
+        {serverError && (
+          <div className="text-red-500 text-sm text-center">{serverError}</div>
+        )}
+
+        {/* Optional: Register link */}
+        {/* <div className="text-center text-sm mt-3 text-gray-400">
+          Don’t have an account?{" "}
+          <a href="/register" className="text-blue-500 hover:underline font-semibold">
+            Sign Up
+          </a>
+        </div> */}
+      </form>
+    </div>
   );
 }

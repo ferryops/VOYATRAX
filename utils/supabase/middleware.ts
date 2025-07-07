@@ -2,9 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function updateSession(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({
-    request,
-  });
+  let supabaseResponse = NextResponse.next({ request });
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -18,9 +16,7 @@ export async function updateSession(request: NextRequest) {
           cookiesToSet.forEach(({ name, value, options }) =>
             request.cookies.set(name, value)
           );
-          supabaseResponse = NextResponse.next({
-            request,
-          });
+          supabaseResponse = NextResponse.next({ request });
           cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options)
           );
@@ -29,12 +25,12 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
-  // --- Auth check ---
+  // Get logged in user
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // --- Redirect ke login jika belum login ---
+  // Block unauthenticated user
   if (
     !user &&
     !request.nextUrl.pathname.startsWith("/login") &&
@@ -45,9 +41,9 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // --- Jika sudah login, cek role dari table users ---
+  // Hanya jika sudah login
   if (user) {
-    // Query role user dari table users
+    // Ambil role dari table users
     const { data: userData, error: userError } = await supabase
       .from("users")
       .select("role")
@@ -56,27 +52,35 @@ export async function updateSession(request: NextRequest) {
 
     const role = userData?.role;
 
-    // Jika error saat get role atau role tidak ditemukan, redirect ke login (atau forbidden)
-    if (userError || !role) {
+    // Cegah ADMIN akses ke /tickets dan /orders
+    if (
+      role === "admin" &&
+      (request.nextUrl.pathname.startsWith("/tickets") ||
+        request.nextUrl.pathname.startsWith("/orders"))
+    ) {
       const url = request.nextUrl.clone();
-      url.pathname = "/login";
+      url.pathname = "/"; // Redirect ke home, atau bisa ke halaman lain
       return NextResponse.redirect(url);
     }
 
-    // Proteksi akses ke /admin: hanya role admin
-    if (request.nextUrl.pathname.startsWith("/admin") && role !== "admin") {
+    // Cegah USER akses ke semua /admins/*
+    if (role === "user" && request.nextUrl.pathname.startsWith("/admins/")) {
       const url = request.nextUrl.clone();
-      url.pathname = "/dashboard";
-      return NextResponse.redirect(url);
-    }
-
-    // Proteksi akses ke /dashboard: hanya role user (atau admin, jika admin boleh dashboard)
-    if (request.nextUrl.pathname.startsWith("/dashboard") && role === "admin") {
-      const url = request.nextUrl.clone();
-      url.pathname = "/admin";
+      url.pathname = "/"; // Redirect ke home
       return NextResponse.redirect(url);
     }
   }
 
   return supabaseResponse;
 }
+
+// Apply middleware to all routes
+export const config = {
+  matcher: [
+    /*
+      Protect all pages except static and public
+      You can specify your own matcher as needed
+    */
+    "/((?!_next/static|_next/image|favicon.ico|logo.png|public|api/auth).*)",
+  ],
+};

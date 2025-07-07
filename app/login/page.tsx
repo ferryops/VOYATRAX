@@ -2,7 +2,7 @@
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { loginWithEmailPassword } from "../(actions)/loginWithEmailPassword";
+import { loginWithRole } from "../(actions)/loginWithEmailPassword";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -18,12 +18,22 @@ export default function LoginPage() {
 
   const onSubmit = async (data: { email: string; password: string }) => {
     setServerError("");
-    const { error } = await loginWithEmailPassword(data.email, data.password);
+    const email = data.email.trim().toLowerCase();
+
+    const { error, role } = await loginWithRole(email, data.password);
+
     if (error) {
       setServerError(error.message);
       return;
     }
-    router.push("/");
+
+    if (role === "admin") {
+      router.push("/admin");
+    } else if (role === "user") {
+      router.push("/dashboard");
+    } else {
+      setServerError("Role tidak ditemukan, hubungi admin.");
+    }
   };
 
   return (

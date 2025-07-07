@@ -1,9 +1,15 @@
 "use client";
-import { useState } from "react";
-import { supabase } from "@/utils/supabaseClient";
+import { useState, useEffect } from "react";
+import {
+  fetchTickets,
+  createTicket,
+  updateTicket,
+  deleteTicket,
+  Ticket,
+} from "@/app/(actions)/ticketActions";
+import { useForm } from "react-hook-form";
 
-type Ticket = {
-  id: number;
+type TicketFormInput = {
   origin: string;
   destination: string;
   date: string;
@@ -14,109 +20,132 @@ type Ticket = {
 
 export default function AdminTickets() {
   const [tickets, setTickets] = useState<Ticket[]>([]);
-  const [form, setForm] = useState<Partial<Ticket>>({});
   const [editingId, setEditingId] = useState<number | null>(null);
   const [error, setError] = useState("");
 
-  const fetchTickets = async () => {
-    const { data, error } = await supabase
-      .from("tickets")
-      .select("*")
-      .order("id", { ascending: false });
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { isSubmitting, errors },
+  } = useForm<TicketFormInput>({
+    defaultValues: {
+      origin: "",
+      destination: "",
+      date: "",
+      departure_time: "",
+      price: 0,
+      stock: 0,
+    },
+  });
+
+  // Fetch tickets ketika komponen load
+  useEffect(() => {
+    refreshTickets();
+  }, []);
+
+  const refreshTickets = async () => {
+    const { data, error } = await fetchTickets();
     if (error) setError(error.message);
     else setTickets(data || []);
   };
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
+  const onSubmit = async (formData: TicketFormInput) => {
     setError("");
     if (editingId) {
-      // Update
-      const { error } = await supabase
-        .from("tickets")
-        .update(form)
-        .eq("id", editingId);
+      const { error } = await updateTicket(editingId, formData);
       if (error) setError(error.message);
     } else {
-      // Create
-      const { error } = await supabase.from("tickets").insert([form]);
+      const { error } = await createTicket(formData);
       if (error) setError(error.message);
     }
-    setForm({});
+    reset();
     setEditingId(null);
-    fetchTickets();
+    refreshTickets();
   };
 
   const handleEdit = (ticket: Ticket) => {
-    setForm(ticket);
+    setValue("origin", ticket.origin);
+    setValue("destination", ticket.destination);
+    setValue("date", ticket.date);
+    setValue("departure_time", ticket.departure_time);
+    setValue("price", Number(ticket.price));
+    setValue("stock", Number(ticket.stock));
     setEditingId(ticket.id);
   };
 
   const handleDelete = async (id: number) => {
     if (!confirm("Delete this ticket?")) return;
-    const { error } = await supabase.from("tickets").delete().eq("id", id);
+    const { error } = await deleteTicket(id);
     if (error) setError(error.message);
-    fetchTickets();
+    refreshTickets();
+  };
+
+  const handleReset = () => {
+    reset();
+    setEditingId(null);
   };
 
   return (
     <div className="p-8">
       <h1 className="font-bold text-2xl mb-4">CRUD Tiket (Admin Only)</h1>
-      <form onSubmit={handleSubmit} className="mb-6 grid grid-cols-6 gap-2">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="mb-6 grid grid-cols-6 gap-2"
+      >
         <input
           placeholder="Origin"
-          value={form.origin || ""}
-          onChange={(e) => setForm({ ...form, origin: e.target.value })}
+          {...register("origin", { required: "Origin is required" })}
           className="input input-bordered"
         />
         <input
           placeholder="Destination"
-          value={form.destination || ""}
-          onChange={(e) => setForm({ ...form, destination: e.target.value })}
+          {...register("destination", { required: "Destination is required" })}
           className="input input-bordered"
         />
         <input
           placeholder="Date"
           type="date"
-          value={form.date || ""}
-          onChange={(e) => setForm({ ...form, date: e.target.value })}
+          {...register("date", { required: "Date is required" })}
           className="input input-bordered"
         />
         <input
           placeholder="Departure Time"
           type="time"
-          value={form.departure_time || ""}
-          onChange={(e) => setForm({ ...form, departure_time: e.target.value })}
+          {...register("departure_time", {
+            required: "Departure time is required",
+          })}
           className="input input-bordered"
         />
         <input
           placeholder="Price"
           type="number"
-          value={form.price || ""}
-          onChange={(e) => setForm({ ...form, price: Number(e.target.value) })}
+          {...register("price", { valueAsNumber: true, min: 0 })}
           className="input input-bordered"
         />
         <input
           placeholder="Stock"
           type="number"
-          value={form.stock || ""}
-          onChange={(e) => setForm({ ...form, stock: Number(e.target.value) })}
+          {...register("stock", { valueAsNumber: true, min: 0 })}
           className="input input-bordered"
         />
-        <button type="submit" className="btn btn-primary col-span-2">
+        <button
+          type="submit"
+          className="btn btn-primary col-span-2"
+          disabled={isSubmitting}
+        >
           {editingId ? "Update" : "Add"} Ticket
         </button>
-        <button
-          type="button"
-          className="btn col-span-2"
-          onClick={() => {
-            setForm({});
-            setEditingId(null);
-          }}
-        >
+        <button type="button" className="btn col-span-2" onClick={handleReset}>
           Reset
         </button>
       </form>
+      {Object.values(errors).map((err, i) => (
+        <div key={i} className="text-red-500 text-sm">
+          {(err as any).message}
+        </div>
+      ))}
       {error && <div className="text-red-500">{error}</div>}
       <table className="table w-full">
         <thead>

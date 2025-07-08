@@ -60,7 +60,8 @@ export default function UserTickets() {
     setError("");
     setSuccess("");
     const items = Object.entries(formData.items || {})
-      .filter(([_, qty]) => qty && Number(qty) > 0)
+      // 63:17  Error: '_' is defined but never used.  @typescript-eslint/no-unused-vars
+      .filter(([, qty]) => qty && Number(qty) > 0)
       .map(([ticket_id, qty]) => ({
         ticket_id: Number(ticket_id),
         quantity: Number(qty),

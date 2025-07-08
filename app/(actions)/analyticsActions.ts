@@ -4,7 +4,7 @@ import { createClient } from "@/utils/supabase/client";
 // Get Total Order Stats by Date
 export async function fetchOrderStats() {
   const supabase = createClient();
-  const { data, error } = await supabase.rpc("order_stats_by_date"); // pakai function SQL, atau
+  const { data } = await supabase.rpc("order_stats_by_date"); // pakai function SQL, atau
   if (data) return { data, error: null };
 
   // fallback manual if RPC function not available
@@ -34,7 +34,7 @@ export async function fetchOrderStats() {
 export async function fetchOrderSummary() {
   const supabase = createClient();
   // Coba pakai function Supabase (jika ada)
-  const { data, error } = await supabase.rpc("order_summary"); // ex: SELECT total_order, total_revenue, total_tickets
+  const { data } = await supabase.rpc("order_summary"); // ex: SELECT total_order, total_revenue, total_tickets
   if (data) return { data, error: null };
 
   // fallback manual
@@ -76,7 +76,7 @@ export async function fetchOrderSummary() {
 export async function fetchOrderStatusSummary() {
   const supabase = createClient();
   // Coba function Supabase (jika ada)
-  const { data, error } = await supabase.rpc("order_status_summary");
+  const { data } = await supabase.rpc("order_status_summary");
   if (data) return { data, error: null };
 
   // fallback manual
@@ -103,7 +103,7 @@ export async function fetchOrderStatusSummary() {
 /** CARD 4: Rute Terpopuler (Bar Chart) */
 export async function fetchPopularRoutes() {
   const supabase = createClient();
-  const { data, error } = await supabase.rpc("popular_routes");
+  const { data } = await supabase.rpc("popular_routes");
   if (data) return { data, error: null };
 
   const { data: items, error: err } = await supabase

@@ -1,5 +1,6 @@
 "use client";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
+import Image from "next/image";
 
 export default function Home() {
   useDocumentTitle("VoyaTrax - Aplikasi Pemesanan Tiket Pesawat");
@@ -15,7 +16,7 @@ export default function Home() {
           </h1>
         </div>
 
-        <img
+        <Image
           src="https://dummyimage.com/600x300/ccc/333&text=VoyaTrax"
           alt="VoyaTrax Banner"
           className="mb-6 rounded-xl border border-blue-100 shadow"

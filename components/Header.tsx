@@ -48,14 +48,13 @@ export default function Header() {
 
     // Listen to Supabase Auth event
     const supabase = createClient();
-    const { data: listener } = supabase.auth.onAuthStateChange((event) => {
+    const { data: listener } = supabase.auth.onAuthStateChange(() => {
       // event: "SIGNED_IN", "SIGNED_OUT", "TOKEN_REFRESHED", etc
       fetchUser();
     });
     return () => {
       listener?.subscription.unsubscribe();
     };
-    // eslint-disable-next-line
   }, []);
 
   // Logout
@@ -68,7 +67,6 @@ export default function Header() {
 
   if (loading) return null; // or skeleton
 
-  // Jangan render kalau user belum login
   if (!user) return null;
 
   const menus = user.role === "admin" ? menusAdmin : menusUser;

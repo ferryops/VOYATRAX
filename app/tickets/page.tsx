@@ -5,6 +5,8 @@ import { createClient } from "@/utils/supabase/client";
 import { useForm } from "react-hook-form";
 import { createOrder } from "../(actions)/orderActions";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
+import TicketFilter from "./components/TicketFilter";
+import { fetchVouchers } from "../(actions)/voucherActions";
 
 type OrderFormInputs = {
   items: Record<string, number>;
@@ -14,11 +16,17 @@ type OrderFormInputs = {
 export default function UserTickets() {
   useDocumentTitle("Daftar Tiket");
   const [tickets, setTickets] = useState<Ticket[]>([]);
-  const [query, setQuery] = useState("");
   const [filtered, setFiltered] = useState<Ticket[]>([]);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [userId, setUserId] = useState<string>("");
+  const [vouchers, setVouchers] = useState<any[]>([]);
+  const [filter, setFilter] = useState({
+    origin: "",
+    destination: "",
+    departureDate: "",
+    returnDate: "",
+  });
 
   const {
     handleSubmit,
@@ -33,7 +41,17 @@ export default function UserTickets() {
     async function getData() {
       const { data, error } = await fetchTickets();
       if (error) setError(error.message);
-      else setTickets(data || []);
+      else {
+        setTickets(data || []);
+        const itemsDefault: Record<string, number> = {};
+        (data || []).forEach((t) => {
+          itemsDefault[t.id] = 0;
+        });
+        reset({
+          items: itemsDefault,
+          voucher: "",
+        });
+      }
     }
     getData();
     createClient()
@@ -41,20 +59,36 @@ export default function UserTickets() {
       .then(({ data }) => {
         if (data.user) setUserId(data.user.id);
       });
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
-    if (!query) setFiltered(tickets);
-    else {
-      setFiltered(
-        tickets.filter(
-          (t) =>
-            t.origin.toLowerCase().includes(query.toLowerCase()) ||
-            t.destination.toLowerCase().includes(query.toLowerCase())
-        )
+    async function getVouchers() {
+      const { data, error } = await fetchVouchers();
+      if (data) setVouchers(data);
+      else if (error) setError(error.message);
+      else setError("Gagal mengambil data voucher.");
+    }
+    getVouchers();
+  }, []);
+
+  useEffect(() => {
+    let data = tickets;
+    if (filter.origin) {
+      data = data.filter((t) =>
+        t.origin.toLowerCase().includes(filter.origin.toLowerCase())
       );
     }
-  }, [query, tickets]);
+    if (filter.destination) {
+      data = data.filter((t) =>
+        t.destination.toLowerCase().includes(filter.destination.toLowerCase())
+      );
+    }
+    if (filter.departureDate) {
+      data = data.filter((t) => t.date === filter.departureDate);
+    }
+    setFiltered(data);
+  }, [tickets, filter]);
 
   const onSubmit = async (formData: OrderFormInputs) => {
     setError("");
@@ -88,14 +122,12 @@ export default function UserTickets() {
           <span className="bg-blue-100 rounded-full p-2 text-2xl">🎟️</span>
           Daftar Tiket
         </h2>
-        <div className="flex gap-2 mb-6">
-          <input
-            placeholder="Cari asal/tujuan..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            className="w-full px-4 py-3 rounded-xl border border-blue-200 focus:ring-2 focus:ring-blue-400 transition placeholder-gray-400 shadow"
-          />
-        </div>
+
+        <TicketFilter
+          onFilter={(filters) => {
+            setFilter(filters);
+          }}
+        />
 
         {error && (
           <div className="bg-red-100 text-red-600 px-4 py-3 rounded-xl mb-4 text-center font-medium">
@@ -195,6 +227,45 @@ export default function UserTickets() {
             >
               {isSubmitting ? "Memproses..." : "Order"}
             </button>
+          </div>
+          <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+            {vouchers.length === 0 && (
+              <div className="text-gray-400 col-span-3 text-center py-6">
+                Tidak ada voucher aktif.
+              </div>
+            )}
+            {vouchers.map((v) => (
+              <div
+                key={v.id}
+                className="bg-white border border-blue-200 rounded-xl shadow p-4 flex flex-col justify-between"
+              >
+                <div>
+                  <div className="font-bold text-blue-600 text-lg mb-1">
+                    {v.code.toUpperCase()}
+                  </div>
+                  <div className="text-gray-600 text-sm mb-2">
+                    Diskon:{" "}
+                    {v.discount_type === "percent"
+                      ? `${v.discount_value}%`
+                      : `Rp${Number(v.discount_value).toLocaleString("id-ID")}`}
+                  </div>
+                  <div className="text-gray-500 text-xs mb-1">
+                    Berlaku: {v.valid_from} s/d {v.valid_until}
+                  </div>
+                </div>
+                <div className="mt-2">
+                  <span
+                    className={`inline-block px-2 py-1 text-xs rounded ${
+                      v.quota === 0
+                        ? "bg-red-100 text-red-500"
+                        : "bg-green-100 text-green-600"
+                    }`}
+                  >
+                    {v.quota === 0 ? "Kuota Habis" : `Sisa Kuota: ${v.quota}`}
+                  </span>
+                </div>
+              </div>
+            ))}
           </div>
         </form>
       </div>

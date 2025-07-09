@@ -17,7 +17,7 @@ export default function Home() {
         </div>
 
         <Image
-          src="https://dummyimage.com/600x300/ccc/333&text=VoyaTrax"
+          src="https://images.unsplash.com/photo-1569629743817-70d8db6c323b"
           alt="VoyaTrax Banner"
           className="mb-6 rounded-xl border border-blue-100 shadow"
           width={600}

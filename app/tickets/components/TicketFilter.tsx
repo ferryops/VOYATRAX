@@ -6,15 +6,26 @@ type TicketFilterProps = {
     destination: string;
     departureDate: string;
     returnDate: string;
+    roundTrip: boolean;
+    passengers: number;
+    flightClass: string;
   }) => void;
 };
 
+const classOptions = [
+  { value: "economy", label: "Economy" },
+  { value: "business", label: "Business" },
+  { value: "first", label: "First Class" },
+];
+
 export default function TicketFilter({ onFilter }: TicketFilterProps) {
+  const [roundTrip, setRoundTrip] = useState(true);
   const [origin, setOrigin] = useState("");
   const [destination, setDestination] = useState("");
   const [departureDate, setDepartureDate] = useState("");
-  const [enableReturn, setEnableReturn] = useState(false);
   const [returnDate, setReturnDate] = useState("");
+  const [passengers, setPassengers] = useState(1);
+  const [flightClass, setFlightClass] = useState("economy");
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -22,88 +33,115 @@ export default function TicketFilter({ onFilter }: TicketFilterProps) {
       origin,
       destination,
       departureDate,
-      returnDate: enableReturn ? returnDate : "",
+      returnDate: roundTrip ? returnDate : "",
+      roundTrip,
+      passengers,
+      flightClass,
     });
   };
 
   return (
     <form
-      className="flex flex-wrap gap-3 bg-white/80 rounded-2xl p-4 shadow mb-8 items-center justify-center"
+      className="flex flex-wrap gap-3 bg-white/90 rounded-2xl p-4 shadow-lg mb-8 items-center justify-center"
       onSubmit={handleSubmit}
     >
+      {/* One-way / Round-trip */}
+      <div className="flex gap-2">
+        <button
+          type="button"
+          className={`px-5 py-2 rounded-full font-semibold transition border ${
+            !roundTrip
+              ? "bg-cyan-700 text-white border-cyan-700"
+              : "bg-white border-gray-300 text-gray-600"
+          }`}
+          onClick={() => setRoundTrip(false)}
+        >
+          One-way
+        </button>
+        <button
+          type="button"
+          className={`px-5 py-2 rounded-full font-semibold transition border ${
+            roundTrip
+              ? "bg-cyan-700 text-white border-cyan-700"
+              : "bg-white border-gray-300 text-gray-600"
+          }`}
+          onClick={() => setRoundTrip(true)}
+        >
+          Round-trip
+        </button>
+      </div>
       {/* Origin */}
       <div className="flex items-center gap-2 flex-1 min-w-[180px]">
-        <span className="text-2xl">🛫</span>
+        <span className="text-xl">🛫</span>
         <input
           type="text"
           placeholder="Kota/Bandara Asal"
-          className="w-full px-4 py-2 rounded-xl border border-blue-200 focus:ring-2 focus:ring-blue-400"
+          className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-cyan-400"
           value={origin}
           onChange={(e) => setOrigin(e.target.value)}
         />
       </div>
-
-      {/* Swap Icon */}
-      <button
-        type="button"
-        className="p-2 rounded-full bg-blue-100 hover:bg-blue-200 transition"
-        onClick={() => {
-          setOrigin(destination);
-          setDestination(origin);
-        }}
-        title="Tukar asal & tujuan"
-      >
-        <span className="text-xl">🔄</span>
-      </button>
-
       {/* Destination */}
       <div className="flex items-center gap-2 flex-1 min-w-[180px]">
-        <span className="text-2xl">🛬</span>
+        <span className="text-xl">🛬</span>
         <input
           type="text"
           placeholder="Kota/Bandara Tujuan"
-          className="w-full px-4 py-2 rounded-xl border border-blue-200 focus:ring-2 focus:ring-blue-400"
+          className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-cyan-400"
           value={destination}
           onChange={(e) => setDestination(e.target.value)}
         />
       </div>
-
       {/* Departure Date */}
       <div className="flex items-center gap-2 min-w-[180px]">
         <span className="text-xl">📅</span>
         <input
           type="date"
-          className="px-3 py-2 rounded-xl border border-blue-200 focus:ring-2 focus:ring-blue-400"
+          className="px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-cyan-400"
           value={departureDate}
           onChange={(e) => setDepartureDate(e.target.value)}
         />
       </div>
-
-      {/* Return Date Checkbox */}
-      <div className="flex items-center gap-2 min-w-[140px]">
-        <input
-          id="enableReturn"
-          type="checkbox"
-          checked={enableReturn}
-          onChange={(e) => setEnableReturn(e.target.checked)}
-        />
-        <label htmlFor="enableReturn" className="select-none font-medium">
-          Return Date
-        </label>
+      {/* Return Date */}
+      {roundTrip && (
+        <div className="flex items-center gap-2 min-w-[180px]">
+          <span className="text-xl">📅</span>
+          <input
+            type="date"
+            className="px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-cyan-400"
+            value={returnDate}
+            onChange={(e) => setReturnDate(e.target.value)}
+          />
+        </div>
+      )}
+      {/* Passenger */}
+      <div className="flex items-center gap-2 min-w-[150px]">
+        <span className="text-xl">👤</span>
+        <select
+          className="rounded-xl px-3 py-2 border border-gray-300 focus:ring-2 focus:ring-cyan-400"
+          value={passengers}
+          onChange={(e) => setPassengers(Number(e.target.value))}
+        >
+          {[...Array(8)].map((_, i) => (
+            <option key={i + 1} value={i + 1}>{`${i + 1} Penumpang`}</option>
+          ))}
+        </select>
       </div>
-
-      {/* Return Date Input */}
-      <div className="flex items-center gap-2 min-w-[180px]">
-        <span className="text-xl">📅</span>
-        <input
-          type="date"
-          className="px-3 py-2 rounded-xl border border-blue-200 focus:ring-2 focus:ring-blue-400"
-          value={returnDate}
-          onChange={(e) => setReturnDate(e.target.value)}
-          disabled={!enableReturn}
-        />
+      {/* Class */}
+      <div className="flex items-center gap-2 min-w-[150px]">
+        <span className="text-xl">💺</span>
+        <select
+          className="rounded-xl px-3 py-2 border border-gray-300 focus:ring-2 focus:ring-cyan-400"
+          value={flightClass}
+          onChange={(e) => setFlightClass(e.target.value)}
+        >
+          {classOptions.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
+        </select>
       </div>
-
       {/* Search Button */}
       <button
         type="submit"

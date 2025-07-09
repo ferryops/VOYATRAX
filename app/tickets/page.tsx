@@ -117,7 +117,7 @@ export default function UserTickets() {
 
   return (
     <div className="min-h-screen bg-blue-50 py-8 px-2">
-      <div className="max-w-3xl mx-auto">
+      <div className="mx-auto px-12">
         <h2 className="text-3xl font-bold text-blue-600 mb-6 text-center flex items-center gap-2 justify-center">
           <span className="bg-blue-100 rounded-full p-2 text-2xl">🎟️</span>
           Daftar Tiket

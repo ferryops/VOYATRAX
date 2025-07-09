@@ -25,25 +25,22 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
-  // Get logged in user
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Block unauthenticated user
   if (
     !user &&
     !request.nextUrl.pathname.startsWith("/login") &&
-    !request.nextUrl.pathname.startsWith("/auth")
+    !request.nextUrl.pathname.startsWith("/register") &&
+    !request.nextUrl.pathname.startsWith("/")
   ) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);
   }
 
-  // Hanya jika sudah login
   if (user) {
-    // Ambil role dari table users
     const { data: userData, error: userError } = await supabase
       .from("users")
       .select("role")
@@ -52,21 +49,19 @@ export async function updateSession(request: NextRequest) {
 
     const role = userData?.role;
 
-    // Cegah ADMIN akses ke /tickets dan /orders
     if (
       role === "admin" &&
       (request.nextUrl.pathname.startsWith("/tickets") ||
         request.nextUrl.pathname.startsWith("/orders"))
     ) {
       const url = request.nextUrl.clone();
-      url.pathname = "/"; // Redirect ke home, atau bisa ke halaman lain
+      url.pathname = "/";
       return NextResponse.redirect(url);
     }
 
-    // Cegah USER akses ke semua /admins/*
     if (role === "user" && request.nextUrl.pathname.startsWith("/admin/")) {
       const url = request.nextUrl.clone();
-      url.pathname = "/"; // Redirect ke home
+      url.pathname = "/";
       return NextResponse.redirect(url);
     }
   }
@@ -74,13 +69,8 @@ export async function updateSession(request: NextRequest) {
   return supabaseResponse;
 }
 
-// Apply middleware to all routes
 export const config = {
   matcher: [
-    /*
-      Protect all pages except static and public
-      You can specify your own matcher as needed
-    */
     "/((?!_next/static|_next/image|favicon.ico|logo.png|public|api/auth).*)",
   ],
 };

@@ -110,13 +110,15 @@ export default function LoginPage() {
           <div className="text-red-500 text-sm text-center">{serverError}</div>
         )}
 
-        {/* Optional: Register link */}
-        {/* <div className="text-center text-sm mt-3 text-gray-400">
+        <div className="text-center text-sm mt-3 text-gray-400">
           Don’t have an account?{" "}
-          <a href="/register" className="text-blue-500 hover:underline font-semibold">
-            Sign Up
+          <a
+            href="/register"
+            className="text-blue-500 hover:underline font-semibold"
+          >
+            Register
           </a>
-        </div> */}
+        </div>
       </form>
     </div>
   );

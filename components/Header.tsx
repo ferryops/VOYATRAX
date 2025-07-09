@@ -23,8 +23,8 @@ export default function Header() {
   const pathname = usePathname();
   const [user, setUser] = useState<{ name: string; role: string } | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showMenu, setShowMenu] = useState(false);
 
-  // Function untuk fetch user
   const fetchUser = async () => {
     const supabase = createClient();
     const {
@@ -44,12 +44,10 @@ export default function Header() {
   };
 
   useEffect(() => {
-    fetchUser(); // Fetch on mount
+    fetchUser();
 
-    // Listen to Supabase Auth event
     const supabase = createClient();
     const { data: listener } = supabase.auth.onAuthStateChange(() => {
-      // event: "SIGNED_IN", "SIGNED_OUT", "TOKEN_REFRESHED", etc
       fetchUser();
     });
     return () => {
@@ -57,15 +55,13 @@ export default function Header() {
     };
   }, []);
 
-  // Logout
   const handleLogout = async () => {
     const supabase = createClient();
     await supabase.auth.signOut();
-    // setUser(null); // Not needed, event listener akan update state
     router.push("/login");
   };
 
-  if (loading) return null; // or skeleton
+  if (loading) return null;
 
   if (!user) return null;
 
@@ -82,26 +78,52 @@ export default function Header() {
           <span>VoyaTrax</span>
         </div>
 
-        {/* MENU */}
-        <div className="flex gap-2 md:gap-4 items-center">
+        <button
+          className="md:hidden p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-300"
+          onClick={() => setShowMenu(!showMenu)}
+        >
+          <svg
+            className="w-6 h-6 text-blue-700"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M4 6h16M4 12h16M4 18h16"
+            />
+          </svg>
+        </button>
+
+        <div
+          className={`
+          flex-col md:flex-row md:flex gap-2 md:gap-4 items-center
+          fixed md:static top-16 left-0 w-full md:w-auto bg-white md:bg-transparent shadow md:shadow-none
+          z-20 md:z-auto transition-all duration-300
+          ${showMenu ? "flex" : "hidden"} md:flex
+        `}
+        >
           {menus.map((m) => (
             <Link
               key={m.href}
               href={m.href}
               className={`px-4 py-2 rounded-xl font-medium transition
-                ${
-                  pathname === m.href
-                    ? "bg-blue-100 text-blue-700 font-bold shadow"
-                    : "text-gray-600 hover:text-blue-700 hover:bg-blue-50"
-                }`}
+              ${
+                pathname === m.href
+                  ? "bg-blue-100 text-blue-700 font-bold shadow"
+                  : "text-gray-600 hover:text-blue-700 hover:bg-blue-50"
+              }`}
+              onClick={() => setShowMenu(false)}
             >
               {m.label}
             </Link>
           ))}
         </div>
 
-        {/* Nama User & Logout */}
-        <div className="flex items-center gap-3">
+        <div className="hidden md:flex items-center gap-3">
           <span className="text-blue-700 font-semibold text-sm px-3 py-2 rounded-xl bg-blue-50 shadow-sm">
             {user.name}
           </span>
@@ -114,6 +136,24 @@ export default function Header() {
           </button>
         </div>
       </nav>
+
+      {showMenu && (
+        <div className="flex md:hidden flex-col gap-2 px-4 pb-3 bg-white shadow z-20">
+          <span className="text-blue-700 font-semibold text-sm px-3 py-2 rounded-xl bg-blue-50 shadow-sm">
+            {user.name}
+          </span>
+          <button
+            onClick={() => {
+              setShowMenu(false);
+              handleLogout();
+            }}
+            className="px-4 py-2 rounded-xl bg-red-500 hover:bg-red-600 text-white font-semibold text-sm shadow transition"
+            title="Logout"
+          >
+            Logout
+          </button>
+        </div>
+      )}
     </header>
   );
 }

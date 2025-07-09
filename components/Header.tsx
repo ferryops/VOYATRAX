@@ -69,7 +69,7 @@ export default function Header() {
 
   return (
     <header className="w-full bg-white border-b border-blue-100 shadow-sm sticky top-0 z-30">
-      <nav className="max-w-5xl mx-auto flex items-center justify-between px-4 py-3">
+      <nav className="max-w-5xl mx-auto flex items-center justify-between px-4 py-3 relative">
         {/* Logo & Nama */}
         <div className="flex items-center gap-2 text-xl font-extrabold text-blue-600">
           <span className="bg-blue-100 rounded-full p-2 text-2xl shadow">
@@ -78,9 +78,11 @@ export default function Header() {
           <span>VoyaTrax</span>
         </div>
 
+        {/* HAMBURGER MENU (MOBILE ONLY) */}
         <button
           className="md:hidden p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-300"
           onClick={() => setShowMenu(!showMenu)}
+          aria-label="Open menu"
         >
           <svg
             className="w-6 h-6 text-blue-700"
@@ -98,62 +100,51 @@ export default function Header() {
           </svg>
         </button>
 
+        {/* MENU + USER (Desktop & Mobile) */}
         <div
           className={`
-          flex-col md:flex-row md:flex gap-2 md:gap-4 items-center
-          fixed md:static top-16 left-0 w-full md:w-auto bg-white md:bg-transparent shadow md:shadow-none
-          z-20 md:z-auto transition-all duration-300
-          ${showMenu ? "flex" : "hidden"} md:flex
-        `}
+            flex-col md:flex-row md:flex gap-2 md:gap-4 items-center
+            absolute md:static top-full left-0 w-full md:w-auto bg-white md:bg-transparent shadow md:shadow-none
+            z-20 transition-all duration-300
+            ${showMenu ? "flex" : "hidden"} md:flex
+          `}
         >
-          {menus.map((m) => (
-            <Link
-              key={m.href}
-              href={m.href}
-              className={`px-4 py-2 rounded-xl font-medium transition
-              ${
-                pathname === m.href
-                  ? "bg-blue-100 text-blue-700 font-bold shadow"
-                  : "text-gray-600 hover:text-blue-700 hover:bg-blue-50"
-              }`}
-              onClick={() => setShowMenu(false)}
+          {/* Link menu */}
+          <div className="flex flex-col md:flex-row gap-2 md:gap-4 w-full md:w-auto">
+            {menus.map((m) => (
+              <Link
+                key={m.href}
+                href={m.href}
+                className={`px-4 py-2 rounded-xl font-medium transition
+                  ${
+                    pathname === m.href
+                      ? "bg-blue-100 text-blue-700 font-bold shadow"
+                      : "text-gray-600 hover:text-blue-700 hover:bg-blue-50"
+                  }`}
+                onClick={() => setShowMenu(false)}
+              >
+                {m.label}
+              </Link>
+            ))}
+          </div>
+          {/* Username & Logout */}
+          <div className="flex flex-col md:flex-row gap-2 md:gap-3 w-full md:w-auto items-center md:ml-4 border-t md:border-t-0 pt-2 md:pt-0 mt-2 md:mt-0">
+            <span className="text-blue-700 font-semibold text-sm px-3 py-2 rounded-xl bg-blue-50 shadow-sm">
+              {user.name}
+            </span>
+            <button
+              onClick={() => {
+                setShowMenu(false);
+                handleLogout();
+              }}
+              className="px-4 py-2 rounded-xl bg-red-500 hover:bg-red-600 text-white font-semibold text-sm shadow transition"
+              title="Logout"
             >
-              {m.label}
-            </Link>
-          ))}
-        </div>
-
-        <div className="hidden md:flex items-center gap-3">
-          <span className="text-blue-700 font-semibold text-sm px-3 py-2 rounded-xl bg-blue-50 shadow-sm">
-            {user.name}
-          </span>
-          <button
-            onClick={handleLogout}
-            className="px-4 py-2 rounded-xl bg-red-500 hover:bg-red-600 text-white font-semibold text-sm shadow transition"
-            title="Logout"
-          >
-            Logout
-          </button>
+              Logout
+            </button>
+          </div>
         </div>
       </nav>
-
-      {showMenu && (
-        <div className="flex md:hidden flex-col gap-2 px-4 pb-3 bg-white shadow z-20">
-          <span className="text-blue-700 font-semibold text-sm px-3 py-2 rounded-xl bg-blue-50 shadow-sm">
-            {user.name}
-          </span>
-          <button
-            onClick={() => {
-              setShowMenu(false);
-              handleLogout();
-            }}
-            className="px-4 py-2 rounded-xl bg-red-500 hover:bg-red-600 text-white font-semibold text-sm shadow transition"
-            title="Logout"
-          >
-            Logout
-          </button>
-        </div>
-      )}
     </header>
   );
 }

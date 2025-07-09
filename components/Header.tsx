@@ -70,7 +70,6 @@ export default function Header() {
   return (
     <header className="w-full bg-white border-b border-blue-100 shadow-sm sticky top-0 z-30">
       <nav className="max-w-5xl mx-auto flex items-center justify-between px-4 py-3 relative">
-        {/* Logo & Nama */}
         <div className="flex items-center gap-2 text-xl font-extrabold text-blue-600">
           <span className="bg-blue-100 rounded-full p-2 text-2xl shadow">
             ✈️
@@ -78,7 +77,6 @@ export default function Header() {
           <span>VoyaTrax</span>
         </div>
 
-        {/* HAMBURGER MENU (MOBILE ONLY) */}
         <button
           className="md:hidden p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-300"
           onClick={() => setShowMenu(!showMenu)}
@@ -100,7 +98,6 @@ export default function Header() {
           </svg>
         </button>
 
-        {/* MENU + USER (Desktop & Mobile) */}
         <div
           className={`
             flex-col md:flex-row md:flex gap-2 md:gap-4 items-center
@@ -109,7 +106,6 @@ export default function Header() {
             ${showMenu ? "flex" : "hidden"} md:flex
           `}
         >
-          {/* Link menu */}
           <div className="flex flex-col md:flex-row gap-2 md:gap-4 w-full md:w-auto">
             {menus.map((m) => (
               <Link
@@ -127,7 +123,7 @@ export default function Header() {
               </Link>
             ))}
           </div>
-          {/* Username & Logout */}
+
           <div className="flex flex-col md:flex-row gap-2 md:gap-3 w-full md:w-auto items-center md:ml-4 border-t md:border-t-0 pt-2 md:pt-0 mt-2 md:mt-0">
             <span className="text-blue-700 font-semibold text-sm px-3 py-2 rounded-xl bg-blue-50 shadow-sm">
               {user.name}

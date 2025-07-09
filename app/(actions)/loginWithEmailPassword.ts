@@ -1,11 +1,9 @@
 "use client";
 import { createClient } from "@/utils/supabase/client";
 
-// function to login with email and password
 export async function loginWithRole(email: string, password: string) {
   const supabase = createClient();
 
-  // 1. Login
   const { error, data } = await supabase.auth.signInWithPassword({
     email,
     password,
@@ -15,7 +13,6 @@ export async function loginWithRole(email: string, password: string) {
     return { error, role: null };
   }
 
-  // 2. Query role from users table
   const { data: userData, error: userError } = await supabase
     .from("users")
     .select("role")

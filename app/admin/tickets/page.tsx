@@ -43,7 +43,6 @@ export default function AdminTickets() {
     },
   });
 
-  // Fetch tickets ketika komponen load
   useEffect(() => {
     refreshTickets();
   }, []);
@@ -93,13 +92,11 @@ export default function AdminTickets() {
   return (
     <div className="min-h-screen bg-blue-50 py-8 px-2">
       <div className="max-w-4xl mx-auto">
-        {/* Judul */}
         <h1 className="text-3xl font-bold text-blue-600 mb-6 text-center flex items-center gap-2 justify-center">
           <span className="bg-blue-100 rounded-full p-2 text-2xl">🛠️</span>
           Kelola Tiket (Admin)
         </h1>
 
-        {/* Form Card */}
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="bg-white rounded-2xl shadow-lg border border-blue-100 px-6 py-7 mb-8 flex flex-col gap-4"
@@ -204,14 +201,12 @@ export default function AdminTickets() {
           </div>
         </form>
 
-        {/* Error global */}
         {error && (
           <div className="bg-red-100 text-red-600 px-4 py-3 rounded-xl mb-4 text-center font-medium">
             {error}
           </div>
         )}
 
-        {/* Daftar Tiket */}
         <div className="grid gap-6">
           {tickets.length === 0 && (
             <div className="text-gray-400 text-center py-12">

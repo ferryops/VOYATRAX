@@ -1,19 +1,16 @@
 "use client";
 import { createClient } from "@/utils/supabase/client";
 
-// Get Total Order Stats by Date
 export async function fetchOrderStats() {
   const supabase = createClient();
-  const { data } = await supabase.rpc("order_stats_by_date"); // pakai function SQL, atau
+  const { data } = await supabase.rpc("order_stats_by_date");
   if (data) return { data, error: null };
 
-  // fallback manual if RPC function not available
   const { data: manual, error: err } = await supabase
     .from("orders")
     .select("order_date, total_price")
     .order("order_date", { ascending: true });
 
-  // agregate total price by date
   const result: { [date: string]: number } = {};
   (manual || []).forEach((o: any) => {
     const date = o.order_date?.slice(0, 10);
@@ -21,7 +18,6 @@ export async function fetchOrderStats() {
     if (!result[date]) result[date] = 0;
     result[date] += Number(o.total_price);
   });
-  // convert to chart data format
   const chartData = Object.entries(result).map(([date, total]) => ({
     date,
     total,
@@ -30,15 +26,12 @@ export async function fetchOrderStats() {
   return { data: chartData, error: err };
 }
 
-/** CARD 1: Ringkasan total order, omzet, tiket terjual */
 export async function fetchOrderSummary() {
   const supabase = createClient();
-  // Coba pakai function Supabase (jika ada)
-  const { data } = await supabase.rpc("order_summary"); // ex: SELECT total_order, total_revenue, total_tickets
+
+  const { data } = await supabase.rpc("order_summary");
   if (data) return { data, error: null };
 
-  // fallback manual
-  // Total order & omzet
   const { count: totalOrders, error: err1 } = await supabase
     .from("orders")
     .select("*", { count: "exact", head: true });
@@ -52,7 +45,6 @@ export async function fetchOrderSummary() {
     0
   );
 
-  // Total tiket terjual (order_items.quantity)
   const { data: orderItems, error: err3 } = await supabase
     .from("order_items")
     .select("quantity");
@@ -72,14 +64,12 @@ export async function fetchOrderSummary() {
   };
 }
 
-/** CARD 3: Status Order (Pie Chart) */
 export async function fetchOrderStatusSummary() {
   const supabase = createClient();
-  // Coba function Supabase (jika ada)
+
   const { data } = await supabase.rpc("order_status_summary");
   if (data) return { data, error: null };
 
-  // fallback manual
   const { data: orders, error: err } = await supabase
     .from("orders")
     .select("status");
@@ -91,7 +81,6 @@ export async function fetchOrderStatusSummary() {
     result[s]++;
   });
 
-  // convert to chart format
   const statusArr = Object.entries(result).map(([status, count]) => ({
     status,
     count,
@@ -100,7 +89,6 @@ export async function fetchOrderStatusSummary() {
   return { data: statusArr, error: err };
 }
 
-/** CARD 4: Rute Terpopuler (Bar Chart) */
 export async function fetchPopularRoutes() {
   const supabase = createClient();
   const { data } = await supabase.rpc("popular_routes");

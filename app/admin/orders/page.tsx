@@ -37,7 +37,6 @@ export default function AdminOrders() {
     else refresh();
   };
 
-  // Helper badge style
   function statusBadge(status: string) {
     const map: Record<string, string> = {
       paid: "bg-green-100 text-green-700",

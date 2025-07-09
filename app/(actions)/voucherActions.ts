@@ -4,7 +4,7 @@ import { createClient } from "@/utils/supabase/client";
 export type Voucher = {
   id: number;
   code: string;
-  discount_type: string; // e.g. 'percent' atau 'nominal'
+  discount_type: string;
   discount_value: number;
   quota: number;
   valid_from: string;

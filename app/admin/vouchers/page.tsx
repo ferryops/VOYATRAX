@@ -88,7 +88,6 @@ export default function AdminVouchers() {
     setEditingId(null);
   };
 
-  // Helper
   function badgeType(type: string) {
     return (
       <span
@@ -112,7 +111,6 @@ export default function AdminVouchers() {
           CRUD Voucher
         </h2>
 
-        {/* Form Voucher */}
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="bg-white rounded-2xl shadow-lg border border-blue-100 px-6 py-7 mb-8 flex flex-col gap-4"
@@ -230,14 +228,12 @@ export default function AdminVouchers() {
           </div>
         </form>
 
-        {/* Error Global */}
         {error && (
           <div className="bg-red-100 text-red-600 px-4 py-3 rounded-xl mb-4 text-center font-medium">
             {error}
           </div>
         )}
 
-        {/* Daftar Voucher */}
         <div className="grid gap-6">
           {vouchers.length === 0 && (
             <div className="text-gray-400 text-center py-12">

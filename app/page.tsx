@@ -24,14 +24,12 @@ export default function Home() {
           height={300}
         />
 
-        {/* Deskripsi */}
         <p className="mb-7 text-lg text-gray-700 text-center max-w-2xl">
           <b>VoyaTrax</b> adalah aplikasi pemesanan tiket pesawat secara online,
           mudah & praktis! Dapatkan tiket termurah, cek promo, dan nikmati
           kemudahan memesan tiket dari mana saja.
         </p>
 
-        {/* 3 Langkah */}
         <div className="grid md:grid-cols-3 gap-5 w-full mb-9">
           <div className="flex flex-col items-center p-3 bg-blue-50 rounded-xl shadow-sm border border-blue-100">
             <div className="bg-blue-100 w-14 h-14 flex items-center justify-center rounded-full mb-3 text-lg font-bold text-blue-700 shadow">
@@ -59,7 +57,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Tombol Aksi */}
         <div className="flex gap-4 mb-3 w-full justify-center">
           <a
             href="/login"
@@ -75,7 +72,6 @@ export default function Home() {
           </a>
         </div>
 
-        {/* Footer */}
         <div className="mt-3 text-sm text-gray-400">
           © {new Date().getFullYear()} VoyaTrax. All rights reserved.
         </div>

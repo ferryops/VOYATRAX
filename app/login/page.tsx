@@ -45,7 +45,6 @@ export default function LoginPage() {
         className="bg-white px-8 py-8 rounded-2xl shadow-lg max-w-md w-full space-y-6 border border-blue-100"
       >
         <div className="flex flex-col items-center gap-2 mb-4">
-          {/* Pakai logo kamu, sementara emoji ✈️ */}
           <div className="bg-blue-100 w-14 h-14 flex items-center justify-center rounded-full shadow mb-1 text-3xl">
             ✈️
           </div>

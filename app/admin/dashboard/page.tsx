@@ -22,7 +22,6 @@ import {
 } from "recharts";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
-// Color palette
 const COLORS = ["#2563eb", "#22c55e", "#fbbf24", "#ef4444", "#7c3aed"];
 
 export default function AdminDashboard() {
@@ -44,7 +43,6 @@ export default function AdminDashboard() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    // Fetch all dashboard data (adjust to your backend logic)
     fetchOrderStats().then(({ data, error }) => {
       if (error) setError(error.message);
       else setOrderStats(data || []);
@@ -76,9 +74,7 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {/* GRID 2x2 */}
         <div className="grid md:grid-cols-2 gap-6">
-          {/* CARD 1: SUMMARY */}
           <div className="bg-white rounded-2xl shadow-md border border-blue-100 p-6 flex flex-col justify-between">
             <h3 className="font-bold text-blue-700 mb-3 text-lg flex items-center gap-2">
               🧾 Ringkasan
@@ -105,7 +101,6 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          {/* CARD 2: LINE CHART */}
           <div className="bg-white rounded-2xl shadow-md border border-blue-100 p-6 flex flex-col">
             <h3 className="font-bold text-blue-700 mb-3 text-lg flex items-center gap-2">
               📈 Penjualan per Hari
@@ -131,7 +126,6 @@ export default function AdminDashboard() {
             )}
           </div>
 
-          {/* CARD 3: PIE CHART STATUS */}
           <div className="bg-white rounded-2xl shadow-md border border-blue-100 p-6 flex flex-col">
             <h3 className="font-bold text-blue-700 mb-3 text-lg flex items-center gap-2">
               🪄 Status Order
@@ -167,7 +161,6 @@ export default function AdminDashboard() {
             )}
           </div>
 
-          {/* CARD 4: BAR CHART RUTE POPULER */}
           <div className="bg-white rounded-2xl shadow-md border border-blue-100 p-6 flex flex-col">
             <h3 className="font-bold text-blue-700 mb-3 text-lg flex items-center gap-2">
               🛫 Rute Terpopuler

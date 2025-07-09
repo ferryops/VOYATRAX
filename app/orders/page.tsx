@@ -37,7 +37,6 @@ export default function UserOrderHistory() {
     }
   }, [userId]);
 
-  // PDF COMPONENT
   const TicketPDF = ({ order }: { order: any }) => (
     <Document>
       <Page size="A6" style={styles.body}>

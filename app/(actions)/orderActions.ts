@@ -14,7 +14,6 @@ export async function createOrder(
 ) {
   const supabase = createClient();
 
-  // Validasi voucher (jika ada)
   let voucher = null;
   if (voucher_code) {
     const { data, error } = await supabase
@@ -26,7 +25,6 @@ export async function createOrder(
       return { error: { message: "Voucher tidak ditemukan!" } };
     voucher = data;
 
-    // Validasi masa berlaku & kuota
     const now = new Date();
     if (
       new Date(voucher.valid_from) > now ||
@@ -39,7 +37,6 @@ export async function createOrder(
     }
   }
 
-  // Hitung total harga
   let total_price = 0;
   for (const item of items) {
     const { data: t } = await supabase
@@ -53,7 +50,6 @@ export async function createOrder(
     total_price += Number(t.price) * item.quantity;
   }
 
-  // Hitung diskon
   let discount = 0;
   let voucher_id = null;
   if (voucher) {
@@ -66,7 +62,6 @@ export async function createOrder(
     if (discount > total_price) discount = total_price;
   }
 
-  // Insert ke table orders
   const { data: order, error: orderError } = await supabase
     .from("orders")
     .insert([
@@ -81,18 +76,16 @@ export async function createOrder(
     .single();
   if (orderError) return { error: orderError };
 
-  // Insert ke table order_items
   for (const item of items) {
     await supabase.from("order_items").insert([
       {
         order_id: order.id,
         ticket_id: item.ticket_id,
         quantity: item.quantity,
-        price: total_price, // bisa custom harga per tiket kalau perlu
+        price: total_price,
       },
     ]);
-    // Update stock tiket
-    // Fetch current stock
+
     const { data: ticketData, error: ticketError } = await supabase
       .from("tickets")
       .select("stock")
@@ -108,7 +101,6 @@ export async function createOrder(
       .eq("id", item.ticket_id);
   }
 
-  // Kurangi kuota voucher jika pakai voucher
   if (voucher) {
     await supabase
       .from("vouchers")
@@ -124,7 +116,7 @@ export async function createOrder(
 
 export async function fetchOrderHistory(user_id: string) {
   const supabase = createClient();
-  // Ambil orders, join order_items & tickets
+
   const { data, error } = await supabase
     .from("orders")
     .select(
@@ -143,7 +135,6 @@ export async function fetchOrderHistory(user_id: string) {
   return { data, error };
 }
 
-// Fetch semua order (admin)
 export async function fetchAllOrders() {
   const supabase = createClient();
   const { data, error } = await supabase
@@ -164,7 +155,6 @@ export async function fetchAllOrders() {
   return { data, error };
 }
 
-// Update status order
 export async function updateOrderStatus(orderId: number, status: string) {
   const supabase = createClient();
   const { error } = await supabase

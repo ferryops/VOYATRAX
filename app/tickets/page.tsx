@@ -26,6 +26,7 @@ export default function UserTickets() {
     destination: "",
     departureDate: "",
     returnDate: "",
+    class: "economy",
   });
 
   const {
@@ -86,6 +87,12 @@ export default function UserTickets() {
     }
     if (filter.departureDate) {
       data = data.filter((t) => t.date === filter.departureDate);
+    }
+    if (filter.returnDate) {
+      data = data.filter((t) => t.date === filter.returnDate);
+    }
+    if (filter.class) {
+      data = data.filter((t) => t.class === filter.class);
     }
     setFiltered(data);
   }, [tickets, filter]);
@@ -191,6 +198,10 @@ export default function UserTickets() {
                   <div>
                     <span className="text-gray-500">Stok</span>
                     <div className="font-semibold">{t.stock}</div>
+                  </div>
+                  <div>
+                    <span className="text-gray-500">Kelas</span>
+                    <div className="font-semibold">{t.class}</div>
                   </div>
                 </div>
                 <div className="flex flex-col items-end justify-between min-w-[110px]">

@@ -17,6 +17,7 @@ type TicketFormInput = {
   departure_time: string;
   price: number;
   stock: number;
+  class: "economy" | "business" | "first";
 };
 
 export default function AdminTickets() {
@@ -40,6 +41,7 @@ export default function AdminTickets() {
       departure_time: "",
       price: 0,
       stock: 0,
+      class: "economy",
     },
   });
 
@@ -74,6 +76,7 @@ export default function AdminTickets() {
     setValue("departure_time", ticket.departure_time);
     setValue("price", Number(ticket.price));
     setValue("stock", Number(ticket.stock));
+    setValue("class", ticket.class);
     setEditingId(ticket.id);
   };
 
@@ -182,6 +185,21 @@ export default function AdminTickets() {
                 </div>
               )}
             </div>
+            <div>
+              <select
+                {...register("class", { required: "Class is required" })}
+                className="w-full px-4 py-3 rounded-xl border border-blue-200 focus:ring-2 focus:ring-blue-400 shadow-sm transition"
+              >
+                <option value="economy">Economy</option>
+                <option value="business">Business</option>
+                <option value="first">First Class</option>
+              </select>
+              {errors.class && (
+                <div className="text-red-500 text-xs mt-1">
+                  {errors.class.message}
+                </div>
+              )}
+            </div>
           </div>
           <div className="flex gap-4 justify-end mt-2">
             <button
@@ -257,6 +275,10 @@ export default function AdminTickets() {
                 <div>
                   <span className="text-gray-500">Stok</span>
                   <div className="font-semibold">{t.stock}</div>
+                </div>
+                <div>
+                  <span className="text-gray-500">Class</span>
+                  <div className="font-semibold">{t.class}</div>
                 </div>
               </div>
               <div className="flex flex-col gap-2 min-w-[120px] items-end">

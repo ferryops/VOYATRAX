@@ -1,3 +1,4 @@
+import { classOptions } from "@/constants/classOptions";
 import { useState } from "react";
 
 type TicketFilterProps = {
@@ -8,15 +9,9 @@ type TicketFilterProps = {
     returnDate: string;
     roundTrip: boolean;
     passengers: number;
-    flightClass: string;
+    class: string;
   }) => void;
 };
-
-const classOptions = [
-  { value: "economy", label: "Economy" },
-  { value: "business", label: "Business" },
-  { value: "first", label: "First Class" },
-];
 
 export default function TicketFilter({ onFilter }: TicketFilterProps) {
   const [roundTrip, setRoundTrip] = useState(true);
@@ -36,7 +31,7 @@ export default function TicketFilter({ onFilter }: TicketFilterProps) {
       returnDate: roundTrip ? returnDate : "",
       roundTrip,
       passengers,
-      flightClass,
+      class: flightClass,
     });
   };
 

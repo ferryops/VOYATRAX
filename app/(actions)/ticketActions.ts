@@ -9,6 +9,7 @@ export type Ticket = {
   departure_time: string;
   price: number;
   stock: number;
+  class: "economy" | "business" | "first";
 };
 
 export async function fetchTickets() {

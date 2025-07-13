@@ -1,6 +1,6 @@
 # Voyatrax ✈️
 
-![Tickets](public/assets/Screenshot 2025-07-13 at 07.58.59.png)
+![Tickets](https://raw.githubusercontent.com/ferryops/VOYATRAX/refs/heads/main/public/assets/Screenshot%202025-07-13%20at%2007.58.59.png)
 
 Voyatrax adalah aplikasi pemesanan tiket pesawat berbasis web yang dibangun dengan **Next.js**, **Tailwind CSS**, dan **Supabase**. Aplikasi ini menyediakan fitur pemesanan tiket bagi pengguna, serta dashboard khusus untuk admin.
 

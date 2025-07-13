@@ -9,6 +9,7 @@ import {
 } from "@/app/(actions)/ticketActions";
 import { useForm } from "react-hook-form";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
+import AutocompleteInput from "@/components/AutocompleteInput";
 
 type TicketFormInput = {
   origin: string;
@@ -32,6 +33,7 @@ export default function AdminTickets() {
     handleSubmit,
     reset,
     setValue,
+    watch,
     formState: { isSubmitting, errors },
   } = useForm<TicketFormInput>({
     defaultValues: {
@@ -106,9 +108,12 @@ export default function AdminTickets() {
         >
           <div className="grid md:grid-cols-6 gap-4">
             <div>
-              <input
-                placeholder="Origin"
-                {...register("origin", { required: "Origin is required" })}
+              <AutocompleteInput
+                value={watch("origin")}
+                onChange={(val) =>
+                  setValue("origin", val, { shouldValidate: true })
+                }
+                placeholder="Kota/Bandara Asal"
                 className="w-full px-4 py-3 rounded-xl border border-blue-200 focus:ring-2 focus:ring-blue-400 shadow-sm transition placeholder-gray-400"
               />
               {errors.origin && (
@@ -118,11 +123,12 @@ export default function AdminTickets() {
               )}
             </div>
             <div>
-              <input
-                placeholder="Destination"
-                {...register("destination", {
-                  required: "Destination is required",
-                })}
+              <AutocompleteInput
+                value={watch("destination")}
+                onChange={(val) =>
+                  setValue("destination", val, { shouldValidate: true })
+                }
+                placeholder="Kota/Bandara Tujuan"
                 className="w-full px-4 py-3 rounded-xl border border-blue-200 focus:ring-2 focus:ring-blue-400 shadow-sm transition placeholder-gray-400"
               />
               {errors.destination && (

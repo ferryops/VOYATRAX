@@ -11,6 +11,7 @@ const menusAdmin: Menu[] = [
   { label: "Tiket", href: "/admin/tickets" },
   { label: "Voucher", href: "/admin/vouchers" },
   { label: "Order", href: "/admin/orders" },
+  { label: "Airports", href: "/admin/airports" },
 ];
 
 const menusUser: Menu[] = [

@@ -21,6 +21,8 @@ import {
   Legend,
 } from "recharts";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
 const COLORS = ["#2563eb", "#22c55e", "#fbbf24", "#ef4444", "#7c3aed"];
 
@@ -61,6 +63,57 @@ export default function AdminDashboard() {
     });
   }, []);
 
+  function handleExportExcel() {
+    const summarySheet = [
+      {
+        "Total Orders": summary.totalOrders,
+        "Total Revenue": summary.totalRevenue,
+        "Total Tickets": summary.totalTickets,
+      },
+    ];
+    const orderStatsSheet = orderStats.map((row) => ({
+      Date: row.date,
+      Total: row.total,
+    }));
+    const orderStatusSheet = orderStatus.map((row) => ({
+      Status: row.status,
+      Count: row.count,
+    }));
+    const popularRoutesSheet = popularRoutes.map((row) => ({
+      Route: row.route,
+      Total: row.total,
+    }));
+
+    const wb = XLSX.utils.book_new();
+
+    XLSX.utils.book_append_sheet(
+      wb,
+      XLSX.utils.json_to_sheet(summarySheet),
+      "Summary"
+    );
+    XLSX.utils.book_append_sheet(
+      wb,
+      XLSX.utils.json_to_sheet(orderStatsSheet),
+      "Order Stats"
+    );
+    XLSX.utils.book_append_sheet(
+      wb,
+      XLSX.utils.json_to_sheet(orderStatusSheet),
+      "Order Status"
+    );
+    XLSX.utils.book_append_sheet(
+      wb,
+      XLSX.utils.json_to_sheet(popularRoutesSheet),
+      "Popular Routes"
+    );
+
+    const wbout = XLSX.write(wb, { type: "array", bookType: "xlsx" });
+    saveAs(
+      new Blob([wbout], { type: "application/octet-stream" }),
+      "dashboard_export.xlsx"
+    );
+  }
+
   return (
     <div className="min-h-screen bg-blue-50 py-8 px-2">
       <div className="max-w-6xl mx-auto">
@@ -73,6 +126,16 @@ export default function AdminDashboard() {
             {error}
           </div>
         )}
+
+        <div className="flex justify-end mb-5">
+          <button
+            onClick={handleExportExcel}
+            className="px-5 py-2 rounded-xl bg-green-600 hover:bg-green-700 text-white font-semibold shadow transition flex items-center gap-2"
+          >
+            <span className="text-xl">⬇️</span>
+            Export Excel
+          </button>
+        </div>
 
         <div className="grid md:grid-cols-2 gap-6">
           <div className="bg-white rounded-2xl shadow-md border border-blue-100 p-6 flex flex-col justify-between">

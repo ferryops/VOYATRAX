@@ -1,3 +1,4 @@
+import AutocompleteInput from "@/components/AutocompleteInput";
 import { classOptions } from "@/constants/classOptions";
 import { useState } from "react";
 
@@ -65,26 +66,23 @@ export default function TicketFilter({ onFilter }: TicketFilterProps) {
           Round-trip
         </button>
       </div>
+
       {/* Origin */}
       <div className="flex items-center gap-2 flex-1 min-w-[180px]">
         <span className="text-xl">🛫</span>
-        <input
-          type="text"
-          placeholder="Kota/Bandara Asal"
-          className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-cyan-400"
+        <AutocompleteInput
           value={origin}
-          onChange={(e) => setOrigin(e.target.value)}
+          onChange={setOrigin}
+          placeholder="Kota/Bandara Asal"
         />
       </div>
       {/* Destination */}
       <div className="flex items-center gap-2 flex-1 min-w-[180px]">
         <span className="text-xl">🛬</span>
-        <input
-          type="text"
-          placeholder="Kota/Bandara Tujuan"
-          className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-cyan-400"
+        <AutocompleteInput
           value={destination}
-          onChange={(e) => setDestination(e.target.value)}
+          onChange={setDestination}
+          placeholder="Kota/Bandara Tujuan"
         />
       </div>
       {/* Departure Date */}

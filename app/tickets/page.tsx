@@ -27,6 +27,7 @@ export default function UserTickets() {
     departureDate: "",
     returnDate: "",
     class: "economy",
+    airline: "",
   });
 
   const {
@@ -93,6 +94,11 @@ export default function UserTickets() {
     }
     if (filter.class) {
       data = data.filter((t) => t.class === filter.class);
+    }
+    if (filter.airline) {
+      data = data.filter((t) =>
+        t.airlines.toLowerCase().includes(filter.airline.toLowerCase())
+      );
     }
     setFiltered(data);
   }, [tickets, filter]);
@@ -202,6 +208,10 @@ export default function UserTickets() {
                   <div>
                     <span className="text-gray-500">Kelas</span>
                     <div className="font-semibold">{t.class}</div>
+                  </div>
+                  <div>
+                    <span className="text-gray-500">Maskapai</span>
+                    <div className="font-semibold">{t.airlines}</div>
                   </div>
                 </div>
                 <div className="flex flex-col items-end justify-between min-w-[110px]">

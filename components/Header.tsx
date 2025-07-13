@@ -12,6 +12,7 @@ const menusAdmin: Menu[] = [
   { label: "Voucher", href: "/admin/vouchers" },
   { label: "Order", href: "/admin/orders" },
   { label: "Airports", href: "/admin/airports" },
+  { label: "Airlines", href: "/admin/airlines" },
 ];
 
 const menusUser: Menu[] = [
@@ -70,7 +71,7 @@ export default function Header() {
 
   return (
     <header className="w-full bg-white border-b border-blue-100 shadow-sm sticky top-0 z-30">
-      <nav className="max-w-5xl mx-auto flex items-center justify-between px-4 py-3 relative">
+      <nav className="mx-auto flex items-center justify-between px-4 py-3 relative">
         <div className="flex items-center gap-2 text-xl font-extrabold text-blue-600">
           <span className="bg-blue-100 rounded-full p-2 text-2xl shadow">
             ✈️

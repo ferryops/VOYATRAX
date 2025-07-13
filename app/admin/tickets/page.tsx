@@ -10,6 +10,7 @@ import {
 import { useForm } from "react-hook-form";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import AutocompleteInput from "@/components/AutocompleteInput";
+import AutocompleteAirlineInput from "@/components/AutocompleteInputAirline";
 
 type TicketFormInput = {
   origin: string;
@@ -19,6 +20,7 @@ type TicketFormInput = {
   price: number;
   stock: number;
   class: "economy" | "business" | "first";
+  airlines: string;
 };
 
 export default function AdminTickets() {
@@ -79,6 +81,7 @@ export default function AdminTickets() {
     setValue("price", Number(ticket.price));
     setValue("stock", Number(ticket.stock));
     setValue("class", ticket.class);
+    setValue("airlines", ticket.airlines);
     setEditingId(ticket.id);
   };
 
@@ -206,6 +209,21 @@ export default function AdminTickets() {
                 </div>
               )}
             </div>
+            <div>
+              <AutocompleteAirlineInput
+                value={watch("airlines")}
+                onChange={(val) =>
+                  setValue("airlines", val, { shouldValidate: true })
+                }
+                placeholder="Maskapai"
+                className="w-full px-4 py-3 rounded-xl border border-blue-200 focus:ring-2 focus:ring-blue-400 shadow-sm transition placeholder-gray-400"
+              />
+              {errors.airlines && (
+                <div className="text-red-500 text-xs mt-1">
+                  {errors.airlines.message}
+                </div>
+              )}
+            </div>
           </div>
           <div className="flex gap-4 justify-end mt-2">
             <button
@@ -285,6 +303,10 @@ export default function AdminTickets() {
                 <div>
                   <span className="text-gray-500">Class</span>
                   <div className="font-semibold">{t.class}</div>
+                </div>
+                <div>
+                  <span className="text-gray-500">Maskapai</span>
+                  <div className="font-semibold">{t.airlines}</div>
                 </div>
               </div>
               <div className="flex flex-col gap-2 min-w-[120px] items-end">

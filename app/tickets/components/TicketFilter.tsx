@@ -1,4 +1,5 @@
 import AutocompleteInput from "@/components/AutocompleteInput";
+import AutocompleteAirlineInput from "@/components/AutocompleteInputAirline";
 import { classOptions } from "@/constants/classOptions";
 import { useState } from "react";
 
@@ -11,6 +12,7 @@ type TicketFilterProps = {
     roundTrip: boolean;
     passengers: number;
     class: string;
+    airline: string;
   }) => void;
 };
 
@@ -22,6 +24,7 @@ export default function TicketFilter({ onFilter }: TicketFilterProps) {
   const [returnDate, setReturnDate] = useState("");
   const [passengers, setPassengers] = useState(1);
   const [flightClass, setFlightClass] = useState("economy");
+  const [airline, setAirline] = useState("");
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -33,6 +36,7 @@ export default function TicketFilter({ onFilter }: TicketFilterProps) {
       roundTrip,
       passengers,
       class: flightClass,
+      airline,
     });
   };
 
@@ -134,6 +138,14 @@ export default function TicketFilter({ onFilter }: TicketFilterProps) {
             </option>
           ))}
         </select>
+      </div>
+      <div className="flex items-center gap-2 flex-1 min-w-[180px]">
+        <span className="text-xl">✈️</span>
+        <AutocompleteAirlineInput
+          value={airline}
+          onChange={setAirline}
+          placeholder="Maskapai (opsional)"
+        />
       </div>
       {/* Search Button */}
       <button

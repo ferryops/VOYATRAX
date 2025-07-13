@@ -10,6 +10,7 @@ export type Ticket = {
   price: number;
   stock: number;
   class: "economy" | "business" | "first";
+  airlines: string;
 };
 
 export async function fetchTickets() {

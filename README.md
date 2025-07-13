@@ -67,14 +67,14 @@ Voyatrax adalah aplikasi pemesanan tiket pesawat berbasis web yang dibangun deng
 ├── components
 ├── pages
 │   ├── admin
-│   │   ├── dashboard.js
-│   │   ├── orders.js
-│   │   ├── tickets.js
-│   │   └── vouchers.js
-│   ├── login.js
-│   ├── register.js
-│   ├── orders.js
-│   └── tickets.js
+│   │   ├── dashboard.tsx
+│   │   ├── orders.tsx
+│   │   ├── tickets.tsx
+│   │   └── vouchers.tsx
+│   ├── login.tsx
+│   ├── register.tsx
+│   ├── orders.tsx
+│   └── tickets.tsx
 ├── styles
 ├── utils
 └── ...
